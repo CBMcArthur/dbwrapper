@@ -1,0 +1,17 @@
+name: Mirror and run GitLab CI
+
+on: [push]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Mirror to GitLab
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GL_TOKEN: ${{ secrets.GL_TOKEN }}
+        run: |
+          git remote add gitlab git@gitlab.com:cbmcarthur/dbwrapper.git
+          git push --mirror gitlab
