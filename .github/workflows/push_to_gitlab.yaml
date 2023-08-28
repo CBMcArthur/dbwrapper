@@ -14,4 +14,6 @@ jobs:
           GL_TOKEN: ${{ secrets.GL_TOKEN }}
         run: |
           git remote add gitlab https://gitlab.com/cbmcarthur/dbwrapper.git
+          git config user.name "cbmcarthur"
+          git config user.email "cbmcarthur@gmail.com"
           git push --mirror gitlab
