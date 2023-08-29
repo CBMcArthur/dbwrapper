@@ -9,7 +9,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          regs: +refs/heads/*:refs/remotes/origin/*
+          ref: +refs/heads/*:refs/remotes/origin/*
           fetch-depth: 0  # Disable shallow cloning
       - name: Configure Git
         run: |
