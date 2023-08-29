@@ -21,4 +21,5 @@ jobs:
           GL_TOKEN: ${{ secrets.GL_TOKEN }}
         run: |
           git remote add gitlab https://cbmcarthur:${{ secrets.GL_TOKEN }}@gitlab.com/cbmcarthur/dbwrapper.git
+          git remote -v
           git push --mirror --force gitlab
