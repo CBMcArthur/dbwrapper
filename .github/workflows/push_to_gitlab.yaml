@@ -8,6 +8,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Disable shallow cloning
+      - name: Configure Git
+        run: |
+          git config user.name "CBMcArthur2"
+          git config user.email "cbmcarthur2@gmail.coim"
       - name: Mirror to GitLab
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
