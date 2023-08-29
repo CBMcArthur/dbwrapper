@@ -9,6 +9,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
+          regs: +refs/heads/*:refs/remotes/origin/*
           fetch-depth: 0  # Disable shallow cloning
       - name: Configure Git
         run: |
@@ -20,4 +21,4 @@ jobs:
           GL_TOKEN: ${{ secrets.GL_TOKEN }}
         run: |
           git remote add gitlab https://cbmcarthur:${{ secrets.GL_TOKEN }}@gitlab.com/cbmcarthur/dbwrapper.git
-          git push --mirror gitlab
+          git push --mirror --force gitlab
