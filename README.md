@@ -1,9 +1,31 @@
 # dbwrapper
 
+## DB Wrapper
+**Objective**: Develop a Python package that acts as a wrapper for PostgreSQL database operations, providing enhanced features and ease of use. 
 
+## Description
+**Database Connection**:
+- Uses SQLAlchemy for connection management and connection pooling
+
+**Schema Management**:
+- Include support for migrations if needed (copy table schema, copy table schema & data)
+
+**Backup and Restore**:
+- Enhance your backup and restore functions, including options for full and partial backups.
+- Implement data validation during restores.
+
+**Query Building**:
+- Create a query builder to simplify the construction of SQL queries.
+- Support parameterized queries to prevent SQL injection.
+
+**Error Handling and Logging**:
+- Implement robust error handling to provide meaningful error messages to users.
+- Set up logging to track database operations and errors.
+
+## Project status
+This will be a work in progress among other works in progress as time allows to practice some development work 
 
 ## Getting started
-
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
 ## Integrate with your tools
@@ -11,7 +33,6 @@ To make it easy for you to get started with GitLab, here's a list of recommended
 - [ ] [Set up project integrations](https://gitlab.com/cbmcarthur/dbwrapper/-/settings/integrations)
 
 ## Test and Deploy
-
 Use the built-in continuous integration in GitLab.
 
 - [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
@@ -36,28 +57,3 @@ Use the built-in continuous integration in GitLab.
 ## Integration
 - [ ] Integrate your wrapper into your database backup script or any other projects where it can be useful.
 
-## DB Wrapper
-**Objective**: Develop a Python package that acts as a wrapper for PostgreSQL database operations, providing enhanced features and ease of use. 
-
-## Description
-**Database Connection**:
-- Uses SQLAlchemy for connection management and connection pooling
-
-**Schema Management**:
-- Add functions for creating, updating, and managing database schemas.
-- Include support for migrations if needed.
-
-**Backup and Restore**:
-- Enhance your backup and restore functions, including options for full and partial backups.
-- Implement data validation during restores.
-
-**Query Building**:
-- Create a query builder to simplify the construction of SQL queries.
-- Support parameterized queries to prevent SQL injection.
-
-**Error Handling and Logging**:
-- Implement robust error handling to provide meaningful error messages to users.
-- Set up logging to track database operations and errors.
-
-## Project status
-This will be a work in progress among other works in progress as time allows to practice some development work 

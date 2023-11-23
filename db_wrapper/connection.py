@@ -1,15 +1,28 @@
-import time
-
-from sqlalchemy import URL, create_engine, text
+from sqlalchemy import URL, create_engine
 from sqlalchemy.exc import OperationalError
 from libraries import validation
 from libraries import logging_utils
 
 class DatabaseConnection:
     def __init__(self, host, port, user, password, database):
-        # Validate the parameters for the DB Connection
+        self.db_engine = None
+
         logging_utils.configure_logging()
         self.logger = logging_utils.get_logger(__name__)
+        self.validate_parameters(host, port, user, password, database)
+
+        # Create the URl for the connection string
+        self.db_url = URL.create('postgresql',
+            username=user,
+            password=password,
+            host=host,
+            port=port,
+            database=database
+        )
+        self.db_engine = self.create_engine()
+
+
+    def validate_parameters(self, host, port, user, password, database):
         if not all ([host, port, user, password, database]):
             error_msg = "Connection Creation Error: one or more parameters (host, post, user, password, and/or database) were not provided."
             self.logger.error(error_msg)
@@ -23,31 +36,22 @@ class DatabaseConnection:
             self.logger.error(error_msg)
             raise ValueError(error_msg)
 
-        # Create the URl for the connection string
-        self.db_url = URL.create('postgresql',
-            username=user,
-            password=password,
-            host=host,
-            port=port,
-            database=database
-        )
+
+    def create_engine(self):
         try:
             # Create DB engine object, then attempt to connect
             self.logger.info(f"Creating database engine with postgresql+psycopg2://{self.db_url.username}:{'*'*len(self.db_url.password)}@{self.db_url.host}:{self.db_url.port}/{self.db_url.database}")
-            self.db_engine = create_engine(self.db_url)
-            with self.db_engine.connect():
+            db_engine = create_engine(self.db_url)
+            with db_engine.connect():
                 pass
         except OperationalError as e:
             error_msg = f"Failed to create the database engine: {e}"
             self.logger.error(error_msg)
             raise ConnectionError(error_msg)
+        return db_engine
 
-    def execute_query(self, sql):
-        with self.db_engine.connect() as conn:
-            self.logger.info(f"Executing query: {sql}")
-            start_time = time.time()
-            results = conn.execute(text(sql))
-            end_time = time.time()
-            self.logger.info(f"Query Execution Time: {(end_time - start_time):.4f} sec")
-        for row in results:
-            print(row)
+
+    def get_db_engine(self):
+        if self.db_engine is None:
+            self.create_engine()
+        return self.db_engine
