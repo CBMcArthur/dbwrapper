@@ -1,7 +1,11 @@
+from dotenv import dotenv_values, find_dotenv
+
 from sqlalchemy import URL, create_engine
 from sqlalchemy.exc import OperationalError
 from libraries import validation
 from libraries import logging_utils
+
+env = dotenv_values(find_dotenv())
 
 class DatabaseConnection:
     def __init__(self, host, port, user, password, database):
@@ -9,15 +13,19 @@ class DatabaseConnection:
 
         logging_utils.configure_logging()
         self.logger = logging_utils.get_logger(__name__)
-        self.validate_parameters(host, port, user, password, database)
+        self.host = host
+        self.port = port
+        self.user = user
+        self.database = database
+        self.validate_parameters(self.host, self.port, self.user, password or env['postgres_password'], self.database)
 
         # Create the URl for the connection string
         self.db_url = URL.create('postgresql',
-            username=user,
-            password=password,
-            host=host,
-            port=port,
-            database=database
+            username=self.user,
+            password=password or env['postgres_password'],
+            host=self.host,
+            port=self.port,
+            database=self.database
         )
         self.db_engine = self.create_engine()
 

@@ -7,10 +7,10 @@ from libraries import logging_utils
 logger = logging_utils.get_logger(__name__)
 
 
-def execute_query(db_engine, sql):
+def execute_query(connection, sql):
     """
     Execute a SQL query using the provided DatabaseConnection instance
-    :param db_engine: connection to the database
+    :param connection: connection to the database via connection module
     :param sql: SQL query to execute
     :return:
     """
@@ -26,7 +26,7 @@ def execute_query(db_engine, sql):
 
     logger.info(f"Executing query: {sql}")
     start_time = time.time()
-    with db_engine.connect() as conn:
+    with connection.get_db_engine().connect() as conn:
         try:
             results = conn.execute(query)
             conn.commit()
