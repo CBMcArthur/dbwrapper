@@ -65,6 +65,7 @@ class TestDatabaseConnection:
 
         assert db_connection.validate_parameters.call_count == 1, 'validate_parameters() should be called once'
         assert db_engine.connect.call_count == 1, 'engine.connect should be called once'
+
     def test_create_db_engine_twice(self, db_connection, set_environment_variables):
         set_environment_variables('localhost', 5432, 'root', 'root', 'postgres')
         db_connection = DatabaseConnection()
