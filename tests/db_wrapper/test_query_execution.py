@@ -3,7 +3,6 @@ import sqlparse
 
 from sqlalchemy import text
 from unittest.mock import Mock, patch
-from db_wrapper.connection import DatabaseConnection
 from db_wrapper import query_execution
 
 

@@ -1,8 +1,6 @@
 import pytest
-import uuid
 
 from unittest.mock import Mock, patch
-from db_wrapper.db_wrapper import DBWrapper
 from db_wrapper.exceptions import DatabaseErrorException, DatabaseWarningException
 from db_wrapper import schema_management
 
