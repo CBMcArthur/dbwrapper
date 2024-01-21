@@ -54,7 +54,7 @@ class DatabaseConnection:
 
     def get_db_engine(self):
         if self.db_engine is None:
-            self.create_engine()
+            self.create_db_engine()
         return self.db_engine
 
 
