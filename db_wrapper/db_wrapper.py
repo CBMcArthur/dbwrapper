@@ -1,20 +1,19 @@
+import dotenv
 from libraries import logging_utils
-try:
-    from connection import DatabaseConnection
-    from query_execution import execute_query
-except ImportError:
-    from db_wrapper.connection import DatabaseConnection
-    from db_wrapper.query_execution import execute_query
+from db_wrapper.connection import DatabaseConnection
+from db_wrapper.query_execution import execute_query
 
+dotenv.load_dotenv(dotenv.find_dotenv())
 
 class DBWrapper:
-    def __init__(self, connection=None, host=None, port=None, user=None, password=None, database=None):
+    def __init__(self, dry_run=False):
         logging_utils.configure_logging()
         self.logger = logging_utils.get_logger(__name__)
-        self.db_connection = connection or DatabaseConnection(host, port, user, password, database)
+        self.dry_run = dry_run
+        self.db_connection = DatabaseConnection()
 
 
-    def execute_query(self, sql=None):
+    def execute_query(self, sql=None, params=None):
         """
         Execute a specified SQL using the previously created database connection
         :param sql: SQL to execute
@@ -27,10 +26,14 @@ class DBWrapper:
             error_msg = "No database connection has been established."
             self.logger.error(error_msg)
             raise ValueError(error_msg)
-        return execute_query(self.db_connection, sql)
+        return execute_query(self.db_connection, sql, params, self.dry_run)
+
 
     def get_db_connection(self):
         return self.db_connection
 
     def get_db_engine(self):
         return self.db_connection.get_db_engine()
+
+    def is_dry_run(self):
+        return self.dry_run
