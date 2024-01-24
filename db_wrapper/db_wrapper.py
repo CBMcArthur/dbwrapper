@@ -1,7 +1,7 @@
 import dotenv
 from libraries import logging_utils
 from db_wrapper.connection import DatabaseConnection
-from db_wrapper.query_execution import execute_query
+from db_wrapper.query_execution import execute_query, format_sql
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -27,6 +27,10 @@ class DBWrapper:
             self.logger.error(error_msg)
             raise ValueError(error_msg)
         return execute_query(self.db_connection, sql, params, self.dry_run)
+
+    def format_query(self, sql=None, params=None):
+        # TODO compile sql with params
+        return format_sql(sql)
 
 
     def get_db_connection(self):

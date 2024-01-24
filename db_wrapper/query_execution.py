@@ -18,8 +18,9 @@ def execute_query(connection, sql, params=None, dry_run=False):
     :return:
     """
     parsed_sql = validate_sql(sql)
-    query = text(parsed_sql[0].normalized)
+    query = text(format_sql(sql))
     query_type = get_query_type(parsed_sql)
+    print(f"\nSQL: {sql}\nParsed: {parsed_sql}\nQuery: {query}\nType: {query_type}")
 
     try:
         connection.get_db_engine()
@@ -39,7 +40,7 @@ def execute_query(connection, sql, params=None, dry_run=False):
                 logger.error(error_msg)
                 return False
 
-            result_data = prep_results(results, query_type)
+            result_data = prep_results(results, query_type[0])
     else:
         if params is not None:
             compiled_sql = query.bindparams(**params).compile(compile_kwargs={'literal_binds': True})
@@ -67,12 +68,12 @@ def prep_results(results, query_type):
 
 
 def format_sql(sql):
-    parsed_sql = validate_sql(sql)
-    return sqlparse.format(parsed_sql[0].normalized, keyword_case='upper')
+    validate_sql(sql)
+    return sqlparse.format(sql, keyword_case='upper')
 
 def get_query_type(sql):
     parsed_sql = validate_sql(sql)
-    return parsed_sql[0].get_type()
+    return [query.get_type() for query in parsed_sql]
 
 def validate_sql(sql):
     if isinstance(sql, tuple) and all(isinstance(stmt, sqlparse.sql.Statement) for stmt in sql):
@@ -85,7 +86,7 @@ def validate_sql(sql):
         raise ValueError(error_msg)
 
     parsed_sql = sqlparse.parse(sql)
-    if parsed_sql[0].get_type() == 'UNKNOWN':
+    if any(query.get_type() == 'UNKNOWN' for query in parsed_sql):
         error_msg = f"SQL provided appears to be malformed: {sql}"
         logger.error(error_msg)
         raise ValueError(error_msg)

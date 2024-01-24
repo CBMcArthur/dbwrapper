@@ -5,7 +5,7 @@ from db_wrapper.exceptions import DatabaseErrorException, DatabaseWarningExcepti
 from db_wrapper import schema_management
 
 
-class TestSchema:
+class TestSchemaManagement:
     @pytest.fixture
     def dbwrapper(self):
         return Mock()

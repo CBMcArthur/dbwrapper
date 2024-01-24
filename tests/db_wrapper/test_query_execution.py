@@ -9,9 +9,10 @@ from db_wrapper import query_execution
 class TestQueryExecution:
 
     parameterized_query_inputs = [
-        ("SELECT * FROM tablea", "SELECT", "SELECT * FROM tablea", None),
-        ("update tablea", "UPDATE", "UPDATE tablea", None),
-        ("DROP tablea", "DROP", "DROP tablea", None),
+        ("SELECT * FROM tablea", ["SELECT"], "SELECT * FROM tablea", None),
+        ("update tablea", ["UPDATE"], "UPDATE tablea", None),
+        ("DROP tablea", ["DROP"], "DROP tablea", None),
+        ("SELECT * FROM tablea; UPDATE tableb SET col = 1", ["SELECT", "UPDATE"], "SELECT * FROM tablea;UPDATE tableb SET col = 1", None),
         ("Bad SQL", None, None, ValueError),
         ({'col': 'value'}, None, None, ValueError)
     ]
@@ -23,12 +24,12 @@ class TestQueryExecution:
                 query_execution.validate_sql(sql)
         else:
             result = query_execution.validate_sql(sql)
-            assert len(result) == 1
+            assert len(result) == len(expected_type)
             assert isinstance(result, tuple)
             assert all(isinstance(stmt, sqlparse.sql.Statement) for stmt in result)
 
             result = query_execution.validate_sql(text(sql))
-            assert len(result) == 1
+            assert len(result) == len(expected_type)
             assert isinstance(result, tuple)
             assert all(isinstance(stmt, sqlparse.sql.Statement) for stmt in result)
 
@@ -64,10 +65,10 @@ class TestQueryExecution:
         query_types = ["INSERT", "UPDATE", "DELETE"]
         results = [{"column1": "value1", "column2": "value2"}, {"column1": "value1", "column2": "value2"}, {"column1": "value1", "column2": "value2"}]
         mock_results = Mock()
-        mock_results.rowcount.return_value = len(results)
+        mock_results.rowcount = len(results)
 
-        for type in query_types:
-            formatted_results = query_execution.prep_results(mock_results, type)
+        for this_type in query_types:
+            formatted_results = query_execution.prep_results(mock_results, this_type)
             assert formatted_results == 3
 
     def test_prep_results_bool(self):
